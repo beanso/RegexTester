@@ -20,16 +20,15 @@ var textareaHighlight = {
 		$(this).pattern.val("");
 	},
 
-	highlight: function(patt) {
+	test: function(patt) {
 		curString = $(this.pattern).val();
 		try {
 			var flags = "";
 			var checked = this.getFlags();
 			for(var i in checked) {
-				if(checked[i] == true) flags = flags + i;
+				if(checked[i] == true) flags = flags + i; //Construct flag string to use in replace
 			}
-			console.log(flags);
-			curString = curString.replace(new RegExp(patt, "g"), "<span style='background-color: yellow !important;'>" + "$&" + "</span>");
+			curString = curString.replace(new RegExp(patt, flags), "<span style='background-color: yellow !important;'>" + "$&" + "</span>");
 		} catch(err) {
 			console.log("Error while replacing - "+err.message);
 		}
@@ -41,16 +40,21 @@ var textareaHighlight = {
 
 //Catch events
 highlightContainer.on('click', function() {
-                                    testText.focus();
+    testText.focus(); // Focus textarea if user clicks on highlight div
 
-                                });
+});
 var input = $("#patternArea");
 input.on("keyup", function() {
-	textareaHighlight.highlight(input.val());
+	textareaHighlight.test(input.val());
 });
 
 testText.on("keyup", function() {
 	highlight.html(testText.val());
+	textareaHighlight.test(input.val());
+});
 
-	textareaHighlight.highlight(input.val());
+$("#flags input").each(function() {
+	$(this).on("click", function() {
+		textareaHighlight.test(input.val()
+	)});
 });
